@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
 
+@login_required(login_url='login')
 def home(request):
     all_users = User.objects.all
     return render(request, 'home.html', {'all': all_users})
@@ -22,44 +24,40 @@ def home(request):
 
 
 def login_page(request):
-    print('a')
     if request.user.is_authenticated:
         return redirect('home')
-    print('b')
     if request.method == "POST":
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        print(username)
-        print(password)
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email__exact=email)
         except:
             messages.error(request, 'User does not exist')
 
-        user = authenticate(request, username=username, password=password)
-
+        user = authenticate(request, username=email, password=password)
         if user is not None:
-            print(user)
             login(request, user)
-            redirect('')
-        return render(request, 'login.html')
-    else:
-        print('c')
-        return render(request, 'login.html')
+            return redirect('home')
+    return render(request, 'login.html')
 
 
 def register_page(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     form = CreateUserForm()
     if request.method == 'POST':
+        print('i')
         form = CreateUserForm(request.POST)
         if form.is_valid():
+            print('j')
             user = form.save(commit=False)
-            user.username = user.username.lower()
+            user.username = user.email.lower()
             user.save()
             login(request, user)
             return redirect('home')
-    else:
-        return render(request, 'register.html', {'form': form})
+        else:
+            messages.error(request, form.errors)
+    return render(request, 'register.html', {'form': form})
 
 
 def logout_user(request):

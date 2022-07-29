@@ -10,6 +10,12 @@ from django.contrib.auth.models import User
 #         fields = ['name', 'surname', 'email', 'password']
 
 class CreateUserForm(UserCreationForm):
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "First name"}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Last name"}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Email"}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': "Password"}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': "Password"}))
+
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
