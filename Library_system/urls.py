@@ -10,4 +10,5 @@ urlpatterns = [
     path('add_author/', views.add_author, name="add_author"),
     path('delete_book/', views.delete_book, name="delete_book"),
     path('delete_author/', views.delete_author, name="delete_author"),
+    path('reservation/', views.reservation, name="reservation"),
 ]

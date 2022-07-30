@@ -15,8 +15,26 @@
       <li><a href="/add_author/">Add author</a></li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
-    {%  for item in all %}
-        <p>{{ item.name }} {{item.surname}} </p>
-    {% endfor %}
+    <form method="POST" action="{% url 'reservation' %}">
+        {% csrf_token %}
+        {%  for item in all %}
+            <p>
+                {{ item.id }} {{ item.name }} {{item.isbn}}
+                {% if item.status == 0 %}
+                    <button type="submit" class="btn btn-primary" name="reservation" value={{ item.id }}>Reservation</button>
+                {% endif %}
+                {% if item.status == 1 %}
+                    <strong>
+                        Borrowed
+                    </strong>
+                {% endif %}
+                {% if item.status == 2 %}
+                    <strong>
+                        Reserved
+                    </strong>
+                {% endif %}
+            </p>
+        {% endfor %}
+    </form>
 </body>
 </html>
