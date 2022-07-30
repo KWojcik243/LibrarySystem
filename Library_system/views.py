@@ -64,6 +64,7 @@ def register_page(request):
 def add_book(request):
     form = BookForm()
     all_authors = Author.objects.all
+    all_books = Book.objects.all
     if request.method == "POST":
         form = BookForm(request.POST)
         if form.is_valid():
@@ -73,12 +74,24 @@ def add_book(request):
             book.save()
         else:
             messages.error(request, form.errors)
-    return render(request, 'add_book.html', {'form': form, 'authors': all_authors})
+    return render(request, 'add_book.html', {'form': form, 'authors': all_authors, 'book': all_books})
+
+
+@login_required(login_url='login')
+def delete_book(request):
+    form = BookForm()
+    all_authors = Author.objects.all
+    all_books = Book.objects.all
+    if request.method == "POST":
+        book = request.POST.get('delete')
+        Book.objects.filter(id=book).delete()
+    return render(request, 'add_book.html', {'form': form, 'authors': all_authors, 'book': all_books})
 
 
 @login_required(login_url='login')
 def add_author(request):
     form = AuthorForm()
+    all_authors = Author.objects.all
     if request.method == "POST":
         form = AuthorForm(request.POST)
         if form.is_valid():
@@ -86,7 +99,17 @@ def add_author(request):
             author.save()
         else:
             messages.error(request, form.errors)
-    return render(request, 'add_author.html', {'form': form})
+    return render(request, 'add_author.html', {'form': form, 'authors': all_authors})
+
+
+@login_required(login_url='login')
+def delete_author(request):
+    form = AuthorForm()
+    all_authors = Author.objects.all
+    if request.method == "POST":
+        author = request.POST.get('delete')
+        Author.objects.filter(id=author).delete()
+    return render(request, 'add_author.html', {'form': form, 'authors': all_authors})
 
 
 def logout_user(request):

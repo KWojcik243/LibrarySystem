@@ -4,11 +4,6 @@ from django.contrib.auth.models import User
 from .models import Book, Author
 
 
-# class UserForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['name', 'surname', 'email', 'password']
-
 class CreateUserForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "First name"}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Last name"}))

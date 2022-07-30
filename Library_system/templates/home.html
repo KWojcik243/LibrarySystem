@@ -1,10 +1,20 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <base href="" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
     <title>Home</title>
 </head>
+
 <body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/add_book/">Add book</a></li>
+      <li><a href="/add_author/">Add author</a></li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
     {%  for item in all %}
         <p>{{ item.name }} {{item.surname}} </p>
     {% endfor %}

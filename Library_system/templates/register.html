@@ -1,10 +1,15 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
     <title>Register</title>
 </head>
 <body>
+    <ul>
+      <li><a href="/login/">Login</a></li>
+    </ul>
     <p>Register</p>
 
     <form method="POST" action="{% url 'register_page' %}">

@@ -1,10 +1,19 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <base href="" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
     <title>Title</title>
 </head>
 <body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/add_book/">Add book</a></li>
+      <li><a href="/add_author/">Add author</a></li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
     <form method="POST" action="{% url 'add_book' %}">
         {% csrf_token %}
         <div>
@@ -43,5 +52,11 @@
                 {% endfor %}
             </ul>
     {% endif %}
+    <form method="POST" action="{% url 'delete_book' %}">
+        {% csrf_token %}
+        {%  for item in book %}
+            <p>{{ item.id }} {{ item.name }} {{item.isbn}} <button type="submit" class="btn btn-primary" name="delete" value={{ item.id }}>Delete</button> </p>
+        {% endfor %}
+    </form>
 </body>
 </html>
