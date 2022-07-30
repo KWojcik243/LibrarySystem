@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="POST" action="{% url 'add_book' %}">
+        {% csrf_token %}
+        <div>
+{#            <input type="text" placeholder="Name" name="name">#}
+            {{ form.name }}
+        </div>
+        <div>
+{#            <input type="text" placeholder="Surname" name="surname">#}
+            {{ form.age_group }}
+        </div>
+        <div>
+{#            <input type="email" placeholder="Email" name="email">#}
+            {{ form.rating }}
+        </div>
+        <div>
+            {{ form.isbn }}
+        </div>
+        <div>
+            {{ form.category }}
+        </div>
+        <div>
+            <label for="author">Choose an Author:</label>
+            <select name="author" id="author">
+                {% for author in authors %}
+                <option value={{ author.id }}>{{ author.name }} {{ author.surname }}</option>
+                {%  endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
+</body>
+</html>

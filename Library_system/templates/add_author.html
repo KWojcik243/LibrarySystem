@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="POST" action="{% url 'add_author' %}">
+        {% csrf_token %}
+        <div>
+            {{ form.name }}
+        </div>
+        <div>
+            {{ form.surname }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
+</body>
+</html>

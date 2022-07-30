@@ -17,6 +17,9 @@ class Author(models.Model):
     name = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
 
+    def __str__(self):
+        return (self.name, self.surname, self.id)
+
 
 class Book(models.Model):
     name = models.CharField(max_length=400)
