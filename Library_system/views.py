@@ -1,5 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models.functions import Concat
+from django.db.models import Value
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm, BookForm, AuthorForm
 from .models import Book, Author, Order
@@ -7,10 +9,25 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime, timedelta
 
-#TOODOO order_exec empty push
+
+# TOODOO order_exec empty push
+# Cancel reservation
+# Add permisions
 @login_required(login_url='login')
 def home(request):
     all_books = Book.objects.all
+    return render(request, 'home.html', {'all': all_books})
+
+
+def search(request):
+    search = request.POST.get('search')
+    queryset = Author.objects.annotate(search_name=Concat('name', Value(' '), 'surname')).filter(search_name__icontains=search).values_list('id', flat=True)
+    list=[]
+    for dic in queryset.values():
+        list.append(int(dic['id']))
+    books_by_author = Book.objects.filter(author_id__id__in=list)
+    books_by_name = Book.objects.filter(name__icontains=search)
+    all_books = books_by_author | books_by_name
     return render(request, 'home.html', {'all': all_books})
 
 
@@ -71,6 +88,15 @@ def register_page(request):
 
 
 @login_required(login_url='login')
+def my_orders(request):
+    current_user = request.user
+    orders = Order.objects.filter(user_id_id=current_user.id)\
+        .values('book_id_id__name', 'action_start_time', 'action_end_time', 'type')
+    return render(request, 'my_orders.html', {'orders': orders})
+
+
+
+@login_required(login_url='login')
 def add_book(request):
     form = BookForm()
     all_authors = Author.objects.all
@@ -80,7 +106,7 @@ def add_book(request):
         if form.is_valid():
             author = request.POST.get('author')
             book = form.save(commit=False)
-            book.author_id = Author.objects.get(id=author)
+            book.author_id = Author.objects.get(id=author.split(' ')[0])
             book.save()
         else:
             messages.error(request, form.errors)
@@ -172,7 +198,7 @@ def order_exec(request):
         return render(request, 'order_exec.html',
                       {'books': books_av, 'users': all_user, 'order': all_order, 'choosen_user': user})
 
-
+@login_required(login_url='login')
 def logout_user(request):
     logout(request)
     return redirect('login')
