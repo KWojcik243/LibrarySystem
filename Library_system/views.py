@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime, timedelta
 
-
+#TOODOO order_exec empty push
 @login_required(login_url='login')
 def home(request):
     all_books = Book.objects.all
@@ -120,6 +120,57 @@ def delete_author(request):
         author = request.POST.get('delete')
         Author.objects.filter(id=author).delete()
     return render(request, 'add_author.html', {'form': form, 'authors': all_authors})
+
+
+@login_required(login_url='login')
+def order_exec(request):
+    if request.method == 'GET':
+        all_user = User.objects.all
+        all_order = Order.objects.all
+        books_res = Book.objects.filter(status=2).values()
+        books_av = Book.objects.filter(status=0).values()
+        print(all_user)
+        books = books_av | books_res
+        # for book in books:
+        #     print(book['name'])
+        return render(request, 'order_exec.html', {'users': all_user})
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(id=(request.POST.get('user')).split(' ')[0])
+        except:
+            user = None
+        try:
+            if int(request.POST.get('res_to_bor')) > 0:
+                order = Order.objects.get(id=request.POST.get('res_to_bor'))
+                order.type = 1
+                order.action_start_time = datetime.now()
+                order.action_end_time = datetime.now() + timedelta(days=14)
+                book = Book.objects.get(id=order.book_id_id)
+                book.status = 1
+                book.save()
+                order.save()
+        except:
+            pass
+        try:
+            if int(request.POST.get('return_book')) > 0:
+                order = Order.objects.get(id=request.POST.get('return_book'))
+                book = Book.objects.get(id=order.book_id_id)
+                book.status = 0
+                book.save()
+                order.delete()
+        except:
+            pass
+
+        all_user = User.objects.all
+        all_order = Order.objects.filter(user_id_id=user.id)
+        # books_res = Book.objects.filter(status=2).values()
+        books_av = Book.objects.filter(status=0)
+        # print(all_user)
+        # books = books_av | books_res
+        # for book in books:
+        #     print(book['name'])
+        return render(request, 'order_exec.html',
+                      {'books': books_av, 'users': all_user, 'order': all_order, 'choosen_user': user})
 
 
 def logout_user(request):
