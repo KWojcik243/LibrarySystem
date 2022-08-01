@@ -1,27 +1,42 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Join</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
+    <title>Register</title>
 </head>
 <body>
-    <p>join</p>
+    <ul>
+      <li><a href="/login/">Login</a></li>
+    </ul>
+    <p>Register</p>
 
-    <form method="POST" action="{% url 'login' %}">
+    <form method="POST" action="{% url 'register_page' %}">
         {% csrf_token %}
         <div>
-            <input type="text" placeholder="Name" name="name">
+            {{ form.first_name }}
         </div>
         <div>
-            <input type="text" placeholder="Surname" name="surname">
+            {{ form.last_name }}
         </div>
         <div>
-            <input type="email" placeholder="Email" name="email">
+            {{ form.email }}
         </div>
         <div>
-            <input type="password" placeholder="Password" name="password">
+            {{ form.password1 }}
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div>
+            {{ form.password2 }}
+        </div>
+        <button type="submit">Submit</button>
     </form>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
 </body>
 </html>

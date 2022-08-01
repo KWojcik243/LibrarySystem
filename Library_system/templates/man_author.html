@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
+    <title>Manage authors</title>
+</head>
+<body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/man_book/">Manage books</a></li>
+      <li><a href="/man_author/">Manage authors</a></li>
+      <li><a href="/order_exec/">Execute orders</a></li>
+      <li><a href="/my_orders/">My orders</a></li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
+    <form method="POST" action="{% url 'man_author' %}">
+        {% csrf_token %}
+        <div>
+            {{ form.name }}
+        </div>
+        <div>
+            {{ form.surname }}
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
+    <form method="POST" action="{% url 'delete_author' %}">
+        {% csrf_token %}
+        {%  for item in authors %}
+            <p>{{ item.id }} {{ item.name }} {{item.surname}} <button type="submit" name="delete" value={{ item.id }}>Delete</button> </p>
+        {% endfor %}
+    </form>
+</body>
+</html>
