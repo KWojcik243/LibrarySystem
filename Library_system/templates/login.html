@@ -1,21 +1,33 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Join</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
+    <title>Login</title>
 </head>
 <body>
-    <p>login</p>
+    <ul>
+      <li><a href="/register/">Register</a></li>
+    </ul>
+    <p>Login</p>
 
     <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
         <div>
-            <input type="text" placeholder="Email" name="username">
+            <input type="text" placeholder="Email" name="email">
         </div>
         <div>
             <input type="password" placeholder="Password" name="password">
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit">Submit</button>
     </form>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
 </body>
 </html>

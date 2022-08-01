@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
+    <title>Manage books</title>
+</head>
+<body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/man_book/">Manage books</a></li>
+      <li><a href="/man_author/">Manage authors</a></li>
+      <li><a href="/order_exec/">Execute orders</a></li>
+      <li><a href="/my_orders/">My orders</a></li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
+    <form method="POST" action="{% url 'man_book' %}">
+        {% csrf_token %}
+        <div>
+            {{ form.name }}
+        </div>
+        <div>
+            {{ form.age_group }}
+        </div>
+        <div>
+            {{ form.rating }}
+        </div>
+        <div>
+            {{ form.isbn }}
+        </div>
+        <div>
+            {{ form.category }}
+        </div>
+        <div>
+            <label for="author">Choose an Author:</label>
+            <input list="author" name="author" value='{{ choosen_user.id }} {{ choosen_user.first_name }} {{ choosen_user.last_name }}'/>
+            <datalist id="author">
+                {% for author in authors %}
+                <option value='{{ author.id }} {{ author.name }} {{ author.surname }}'></option>
+                {%  endfor %}
+            </datalist>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
+    <form method="POST" action="{% url 'delete_book' %}">
+        {% csrf_token %}
+        {%  for item in book %}
+            <p>{{ item.id }} {{ item.name }} {{item.isbn}} <button type="submit" name="delete" value={{ item.id }}>Delete</button> </p>
+        {% endfor %}
+    </form>
+</body>
+</html>
