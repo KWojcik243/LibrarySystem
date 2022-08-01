@@ -7,12 +7,11 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
     <title>Home</title>
 </head>
-
 <body>
     <ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/add_book/">Add book</a></li>
-      <li><a href="/add_author/">Add author</a></li>
+      <li><a href="/man_book/">Manage books</a></li>
+      <li><a href="/man_author/">Manage authors</a></li>
       <li><a href="/order_exec/">Execute orders</a></li>
       <li><a href="/my_orders/">My orders</a></li>
       <li><a href="/logout/">Logout</a></li>
@@ -20,14 +19,14 @@
     <form method="POST" action="{% url 'search' %}">
         {% csrf_token %}
         <input name="search" placeholder="Search"/>
-        <button type="submit" class="btn btn-primary" name="srch">Search</button>
+        <button type="submit" name="srch">Search</button>
     </form>
     <form method="POST" action="{% url 'reservation' %}">
         {%  for item in all %}
             <p>
                 {{ item.id }} {{ item.name }} {{item.isbn}}
                 {% if item.status == 0 %}
-                    <button type="submit" class="btn btn-primary" name="reservation" value={{ item.id }}>Make reservation</button>
+                    <button type="submit" name="reservation" value={{ item.id }}>Make reservation</button>
                 {% endif %}
                 {% if item.status == 1 %}
                     <strong>

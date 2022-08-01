@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 
 
 # TOODOO order_exec empty push
-# Cancel reservation
 # Add permisions
 @login_required(login_url='login')
 def home(request):
@@ -91,13 +90,23 @@ def register_page(request):
 def my_orders(request):
     current_user = request.user
     orders = Order.objects.filter(user_id_id=current_user.id)\
-        .values('book_id_id__name', 'action_start_time', 'action_end_time', 'type')
+        .values('id', 'book_id_id__name', 'action_start_time', 'action_end_time', 'type')
     return render(request, 'my_orders.html', {'orders': orders})
 
 
+@login_required(login_url='login')
+def cancel_reservation(request):
+    order_id = request.POST.get('cancel_reservation')
+    order = Order.objects.get(id=order_id)
+    book = Book.objects.get(id=order.book_id_id)
+    book.status = 0
+    book.save()
+    order.delete()
+    return redirect('my_orders')
+
 
 @login_required(login_url='login')
-def add_book(request):
+def man_book(request):
     form = BookForm()
     all_authors = Author.objects.all
     all_books = Book.objects.all
@@ -110,7 +119,7 @@ def add_book(request):
             book.save()
         else:
             messages.error(request, form.errors)
-    return render(request, 'add_book.html', {'form': form, 'authors': all_authors, 'book': all_books})
+    return render(request, 'man_book.html', {'form': form, 'authors': all_authors, 'book': all_books})
 
 
 @login_required(login_url='login')
@@ -121,11 +130,11 @@ def delete_book(request):
     if request.method == "POST":
         book = request.POST.get('delete')
         Book.objects.filter(id=book).delete()
-    return render(request, 'add_book.html', {'form': form, 'authors': all_authors, 'book': all_books})
+    return render(request, 'man_book.html', {'form': form, 'authors': all_authors, 'book': all_books})
 
 
 @login_required(login_url='login')
-def add_author(request):
+def man_author(request):
     form = AuthorForm()
     all_authors = Author.objects.all
     if request.method == "POST":
@@ -135,7 +144,7 @@ def add_author(request):
             author.save()
         else:
             messages.error(request, form.errors)
-    return render(request, 'add_author.html', {'form': form, 'authors': all_authors})
+    return render(request, 'man_author.html', {'form': form, 'authors': all_authors})
 
 
 @login_required(login_url='login')
@@ -145,7 +154,7 @@ def delete_author(request):
     if request.method == "POST":
         author = request.POST.get('delete')
         Author.objects.filter(id=author).delete()
-    return render(request, 'add_author.html', {'form': form, 'authors': all_authors})
+    return render(request, 'man_author.html', {'form': form, 'authors': all_authors})
 
 
 @login_required(login_url='login')
@@ -197,6 +206,7 @@ def order_exec(request):
         #     print(book['name'])
         return render(request, 'order_exec.html',
                       {'books': books_av, 'users': all_user, 'order': all_order, 'choosen_user': user})
+
 
 @login_required(login_url='login')
 def logout_user(request):

@@ -11,8 +11,8 @@
 <body>
     <ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/add_book/">Add book</a></li>
-      <li><a href="/add_author/">Add author</a></li>
+      <li><a href="/man_book/">Manage books</a></li>
+      <li><a href="/man_author/">Manage authors</a></li>
       <li><a href="/order_exec/">Execute orders</a></li>
       <li><a href="/my_orders/">My orders</a></li>
       <li><a href="/logout/">Logout</a></li>
@@ -21,7 +21,6 @@
         {% csrf_token %}
             <div>
                 <label for="user">Choose a User:</label>
-{#                <select name="user" id="user">#}
                 <input list="user" name="user" value='{{ choosen_user.id }} {{ choosen_user.first_name }} {{ choosen_user.last_name }}'/>
                 <datalist id="user">
                     {% for user in users %}
@@ -32,22 +31,21 @@
                             <option value='{{ user.id }} {{ user.first_name }} {{ user.last_name }}'></option>
                         {% endif %}
                     {%  endfor %}
-{#                </select>#}
                 </datalist>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit">Submit</button>
             <p><strong>Your books</strong></p>
             <div>
                 {% for order in order %}
                     <p>{{ order.book_id_id }}
                         {% if order.type == 2 %}
-                            Reserved <button type="submit" class="btn btn-primary" name="res_to_bor" value={{ order.id }}>Borrow</button>
+                            Reserved <button type="submit" name="res_to_bor" value={{ order.id }}>Borrow</button>
                         {% endif %}
                         {% if order.type == 1 %}
-                            Borrowed <button type="submit" class="btn btn-primary" name="return_book" value={{ order.id }}>Return</button>
+                            Borrowed <button type="submit" name="return_book" value={{ order.id }}>Return</button>
                         {% endif %}
                         {% if order.type == 3 %}
-                            <strong>Delay</strong> <button type="submit" class="btn btn-primary" name="return_book" value={{ order.id }}>Return</button>
+                            <strong>Delay</strong> <button type="submit" name="return_book" value={{ order.id }}>Return</button>
                         {% endif %}
                     </p>
                 {%  endfor %}
@@ -57,30 +55,10 @@
                 {% for book in books %}
                     <p>
                         {{ book.name }}
-                        <button type="submit" class="btn btn-primary" name="want_to_borrow" value={{ book.id }}>Borrow</button>
+                        <button type="submit" name="want_to_borrow" value={{ book.id }}>Borrow</button>
                     </p>
                 {%  endfor %}
             </div>
-
-
-{#        {%  for item in all %}#}
-{#            <p>#}
-{#                {{ item.id }} {{ item.name }} {{item.isbn}}#}
-{#                {% if item.status == 0 %}#}
-{#                    <button type="submit" class="btn btn-primary" name="reservation" value={{ item.id }}>Reservation</button>#}
-{#                {% endif %}#}
-{#                {% if item.status == 1 %}#}
-{#                    <strong>#}
-{#                        Borrowed#}
-{#                    </strong>#}
-{#                {% endif %}#}
-{#                {% if item.status == 2 %}#}
-{#                    <strong>#}
-{#                        Reserved#}
-{#                    </strong>#}
-{#                {% endif %}#}
-{#            </p>#}
-{#        {% endfor %}#}
     </form>
 </body>
 </html>

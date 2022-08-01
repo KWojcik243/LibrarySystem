@@ -15,15 +15,12 @@
     <form method="POST" action="{% url 'register_page' %}">
         {% csrf_token %}
         <div>
-{#            <input type="text" placeholder="Name" name="name">#}
             {{ form.first_name }}
         </div>
         <div>
-{#            <input type="text" placeholder="Surname" name="surname">#}
             {{ form.last_name }}
         </div>
         <div>
-{#            <input type="email" placeholder="Email" name="email">#}
             {{ form.email }}
         </div>
         <div>
@@ -32,7 +29,7 @@
         <div>
             {{ form.password2 }}
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit">Submit</button>
     </form>
     {% if messages %}
             <ul class="messages">
