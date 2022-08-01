@@ -5,3 +5,8 @@
  
  
  ![](https://github.com/KWojcik243/LibrarySystem/blob/main/DB.png)
+ 
+ 
+ ##  TODOO
+ -  Add permissions
+ -  Add CSS
