@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <base href="" />
     <link rel="stylesheet" type="text/css" media="screen" href="{% static '/main.css' %}" />
-    <title>Home</title>
+    <title>My Orders</title>
 </head>
 <body>
     <ul>
@@ -16,30 +16,25 @@
       <li><a href="/my_orders/">My orders</a></li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
-    <form method="POST" action="{% url 'search' %}">
+    <form method="POST" action={% url 'cancel_reservation' %}>
         {% csrf_token %}
-        <input name="search" placeholder="Search"/>
-        <button type="submit" name="srch">Search</button>
-    </form>
-    <form method="POST" action="{% url 'reservation' %}">
-        {%  for item in all %}
-            <p>
-                {{ item.id }} {{ item.name }} {{item.isbn}}
-                {% if item.status == 0 %}
-                    <button type="submit" name="reservation" value={{ item.id }}>Make reservation</button>
-                {% endif %}
-                {% if item.status == 1 %}
+        <div>
+            {% for order in orders %}
+                <p>{{ order.id }} {{ order.action_start_time }} | {{ order.action_end_time }} | {{ order.book_id_id__name }}
+                {% if order.type == 1 %}
                     <strong>
                         Borrowed
                     </strong>
                 {% endif %}
-                {% if item.status == 2 %}
+                {% if order.type == 2 %}
                     <strong>
-                        Reserved
+                        Reserved <button type="submit" name="cancel_reservation" value={{ order.id }}>Cancel reservation</button>
                     </strong>
                 {% endif %}
-            </p>
-        {% endfor %}
+                </p>
+            {% endfor %}
+        </div>
     </form>
+
 </body>
 </html>
