@@ -176,6 +176,7 @@ def order_exec(request):
             user = None
         try:
             if int(request.POST.get('res_to_bor')) > 0:
+                print("tak?")
                 order = Order.objects.get(id=request.POST.get('res_to_bor'))
                 order.type = 1
                 order.action_start_time = datetime.now()
@@ -188,6 +189,7 @@ def order_exec(request):
             pass
         try:
             if int(request.POST.get('return_book')) > 0:
+                print("nie?")
                 order = Order.objects.get(id=request.POST.get('return_book'))
                 book = Book.objects.get(id=order.book_id_id)
                 book.status = 0
@@ -195,15 +197,34 @@ def order_exec(request):
                 order.delete()
         except:
             pass
-
-        all_user = User.objects.all
-        all_order = Order.objects.filter(user_id_id=user.id)
-        # books_res = Book.objects.filter(status=2).values()
-        books_av = Book.objects.filter(status=0)
-        # print(all_user)
-        # books = books_av | books_res
-        # for book in books:
-        #     print(book['name'])
+        try:
+            if int(request.POST.get('want_to_borrow')) > 0:
+                now = datetime.today()
+                
+                two_weeks = now + timedelta(days=14)
+                print(two_weeks)
+                book = Book.objects.get(id=request.POST.get('want_to_borrow'))
+                order = Order(book_id=book,
+                action_start_time=now,
+                action_end_time=two_weeks,
+                type=1,
+                user_id=user)
+                Order
+                order.save()
+                print(order)
+                book = Book.objects.get(id=order.book_id_id)
+                book.status = 1
+                book.save()
+                
+        except:
+            print("blad")
+            pass
+        try:
+            all_user = User.objects.all
+            books_av = Book.objects.filter(status=0)
+            all_order = Order.objects.filter(user_id_id=user.id)
+        except:
+            all_order = Order.objects.filter(user_id_id=-1)
         return render(request, 'order_exec.html',
                       {'books': books_av, 'users': all_user, 'order': all_order, 'choosen_user': user})
 

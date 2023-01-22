@@ -21,7 +21,9 @@
         <input name="search" placeholder="Search"/>
         <button type="submit" name="srch">Search</button>
     </form>
+    {% csrf_token %}
     <form method="POST" action="{% url 'reservation' %}">
+        {% csrf_token %}
         {%  for item in all %}
             <p>
                 {{ item.id }} {{ item.name }} {{item.isbn}}

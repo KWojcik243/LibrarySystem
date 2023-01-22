@@ -21,7 +21,7 @@
         {% csrf_token %}
             <div>
                 <label for="user">Choose a User:</label>
-                <input list="user" name="user" value='{{ choosen_user.id }} {{ choosen_user.first_name }} {{ choosen_user.last_name }}'/>
+                <input list="user"name="user" value='{{ choosen_user.id }} {{ choosen_user.first_name }} {{ choosen_user.last_name }}'/>
                 <datalist id="user">
                     {% for user in users %}
                         {% if choosen_user.id == user.id  %}
